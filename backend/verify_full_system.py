@@ -28,10 +28,12 @@ from datetime import datetime, timezone
 from pathlib import Path
 from starlette.testclient import TestClient
 
-# Ensure sys.path includes root
-ROOT_DIR = Path(__file__).resolve().parent
-if str(ROOT_DIR) not in sys.path:
-    sys.path.insert(0, str(ROOT_DIR))
+# Ensure sys.path includes backend and root
+BACKEND_DIR = Path(__file__).resolve().parent
+ROOT_DIR = BACKEND_DIR.parent
+for p in (str(BACKEND_DIR), str(ROOT_DIR)):
+    if p not in sys.path:
+        sys.path.insert(0, p)
 
 from backend.main import app
 from backend.api.routes import backend

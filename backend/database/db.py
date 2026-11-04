@@ -8,12 +8,13 @@ Provides:
     - ``init_db()`` / ``close_db()`` — lifecycle helpers for startup/shutdown.
 
 The SQLite database file (``robotrace.db`` by default) is stored in the
-project root and excluded from Git via ``.gitignore``.
+backend directory and excluded from Git via ``.gitignore``.
 """
 
 import logging
 import os
 from contextlib import asynccontextmanager
+from pathlib import Path
 from typing import AsyncGenerator
 
 from sqlalchemy import event
@@ -32,9 +33,10 @@ logger = logging.getLogger(__name__)
 # Engine
 # ---------------------------------------------------------------------------
 
+DEFAULT_DB_PATH = Path(__file__).resolve().parent.parent / "robotrace.db"
 DATABASE_URL: str = os.getenv(
     "DATABASE_URL",
-    "sqlite+aiosqlite:///./robotrace.db",
+    f"sqlite+aiosqlite:///{DEFAULT_DB_PATH.as_posix()}",
 )
 
 engine = create_async_engine(
@@ -142,4 +144,3 @@ async def get_db_session() -> AsyncGenerator[AsyncSession, None]:
         raise
     finally:
         await session.close()
-

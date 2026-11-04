@@ -7,10 +7,12 @@ Run this script to observe robot movement, velocity steering, and A* pathfinding
 import sys
 from pathlib import Path
 
-# Add project root to sys.path
-ROOT_DIR = Path(__file__).resolve().parent
-if str(ROOT_DIR) not in sys.path:
-    sys.path.insert(0, str(ROOT_DIR))
+# Add backend and root to sys.path
+BACKEND_DIR = Path(__file__).resolve().parent
+ROOT_DIR = BACKEND_DIR.parent
+for p in (str(BACKEND_DIR), str(ROOT_DIR)):
+    if p not in sys.path:
+        sys.path.insert(0, p)
 
 from engine.simulation import WarehouseSimulation
 from engine.navigation import WaypointNavigator
